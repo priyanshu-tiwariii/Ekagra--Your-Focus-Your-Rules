@@ -1,0 +1,37 @@
+{
+    "manifest_version": 3,
+    "name": "Ekagra - Your Focus, Your Rules",
+    "version": "1.0",
+    "description": "Ekagra intelligently pauses videos when you switch tabs, idle, or scroll. Includes focus mode (background blur), whitelists, time-saving analytics, and keyboard shortcuts. Works on YouTube, Netflix, Twitch, and more—no data collection.",
+
+  "permissions": [
+    "tabs",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://*.youtube.com/*",
+    "*://*.netflix.com/*",
+    "*://*.twitch.tv/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.netflix.com/*",
+        "*://*.twitch.tv/*"
+      ],
+      "js": ["content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["content.js", "assets/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
+

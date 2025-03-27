@@ -1,0 +1,165 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    border-radius: 12px;
+}
+
+/* Subtle Gradient Background */
+body {
+    background: linear-gradient(to bottom right, #F8FAFC, #EEF2FF);
+    border-radius: 12px;
+    display: flex;
+  
+    align-items: center;
+    justify-content: center;
+}
+
+/* Popup Container */
+.popup-container {
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    width: 350px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Header */
+.popup-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #E5E7EB;
+    padding-bottom: 12px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #4F46E5;
+}
+
+.brand p {
+    font-size: 12px;
+    color: #6B7280;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #F3F4F6;
+    border-radius: 10px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.toggle-switch:hover {
+    background: #E5E7EB;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+/* Default OFF state */
+.slider {
+    width: 40px;
+    height: 20px;
+    background: linear-gradient(135deg, #4F46E5, #9333EA); /* Default Purple */
+    border-radius: 20px;
+    position: relative;
+    transition: 0.3s;
+}
+
+/* Circular slider button */
+.slider::before {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: 0.3s;
+}
+
+/* When toggled ON */
+input:checked + .slider {
+    background: linear-gradient(135deg, #22C55E, #16A34A); /* Green for ON */
+}
+
+/* Move the button when ON */
+input:checked + .slider::before {
+    transform: translateX(20px);
+}
+
+/* Whitelist Section */
+.whitelist-section ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.whitelist-section li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #F3F4F6;
+    padding: 8px;
+    border-radius: 6px;
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+/* Remove Button */
+.remove-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: red;
+    font-size: 14px;
+}
+
+
+.input-group {
+    display: flex;
+    margin-top: 8px;
+}
+
+.input-group input {
+    flex: 1;
+    padding: 8px;
+    margin-right: 12px;
+    border-radius: 6px;
+    border: 1px solid #D1D5DB;
+}
+
+.input-group button {
+    background: linear-gradient(135deg, #4F46E5, #9333EA);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Footer */
+footer p {
+    font-size: 12px;
+    text-align: center;
+    color: #6B7280;
+    margin-top: 12px;
+}

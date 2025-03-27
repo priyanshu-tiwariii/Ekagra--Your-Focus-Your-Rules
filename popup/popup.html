@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekagra - Your Focus, Your Rules</title>
+    <link rel="stylesheet" href="popup.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="popup-container">
+        <header class="popup-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="16" cy="16" r="14" stroke="url(#softGradient)" stroke-width="3"/>
+                        <circle cx="16" cy="16" r="8" fill="url(#innerGlow)"/>
+                        <defs>
+                            <linearGradient id="softGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#3B82F6"/>  
+                                <stop offset="100%" stop-color="#A855F7"/>  
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="brand">
+                    <h1>Ekagra</h1>
+                    <p>Your Focus, Your Rules.</p>
+                </div>
+            </div>
+        </header>
+
+        <main class="popup-main">
+            <div class="feature-card">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="scrollToggle">
+                    <span class="slider"></span>
+                    <div class="toggle-text">
+                        <span class="toggle-label">Smart Pause</span>
+                        <span class="toggle-description">Auto-pause on scroll</span>
+                    </div>
+                </label>
+            </div>
+
+            <section class="whitelist-section">
+                <h3>Focus-Free Websites</h3>
+                <div class="input-group">
+                    <input type="text" id="whitelistInput" placeholder="Add website (e.g. youtube.com)">
+                    <button id="addWhitelist">+</button>
+                </div>
+                <ul id="whitelist"></ul>
+            </section>
+        </main>
+
+        <footer>
+            <p>Crafted with ❤️ in India</p>
+        </footer>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>

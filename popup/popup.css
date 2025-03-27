@@ -1,21 +1,3 @@
-/* Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
-    border-radius: 12px;
-}
-
-/* Subtle Gradient Background */
-body {
-    background: linear-gradient(to bottom right, #F8FAFC, #EEF2FF);
-    border-radius: 12px;
-    display: flex;
-  
-    align-items: center;
-    justify-content: center;
-}
 
 /* Popup Container */
 .popup-container {

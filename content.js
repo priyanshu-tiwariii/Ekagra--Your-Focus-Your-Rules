@@ -1,107 +1,38 @@
-
 const state = {
     videos: [],
-    playbackPosition: 0,
-    settings: {
-        scrollPause: true
-    },
+    playbackPositions: new Map(),
+    settings: null, 
     whitelisted: false,
-    lastScrollY: window.scrollY
+    scrollTimeout: null
 };
 
-// Improved whitelist check
-function checkWhitelist() {
-    chrome.runtime.sendMessage(
-        { action: 'checkWhitelist', url: window.location.href },
-        (response) => {
-            state.whitelisted = response;
-            console.log('Whitelist status:', state.whitelisted, 'for', window.location.href);
-        }
-    );
-}
-
-// Initialize
-function init() {
-    checkWhitelist();
-    setupVideoTracking();
-    setupEventListeners();
-    
-    // Listen for whitelist updates
-    chrome.runtime.onMessage.addListener((message) => {
-        if (message.action === 'whitelistUpdated') {
-            checkWhitelist();
-        }
+// Check whitelist status -----------------------------------------------------------------------------------------------------------
+function checkWhitelist(callback) {
+    chrome.runtime.sendMessage({ 
+        action: 'checkWhitelist', 
+        url: window.location.href 
+    }, (response) => {
+        state.whitelisted = response;
+        if (callback) callback();
     });
 }
 
-
-
-// Check if the current site is whitelisted
-function checkWhitelist() {
-    chrome.runtime.sendMessage(
-        { action: 'checkWhitelist', url: window.location.href },
-        (response) => {
-            state.whitelisted = response;
-        }
-    );
-}
-
-// Video tracking
+// Setup video tracking -----------------------------------------------------------------------------------------------------------
 function setupVideoTracking() {
-    function refreshVideos() {
+    const refreshVideos = () => {
         state.videos = Array.from(document.querySelectorAll('video'));
-    }
-
+    };
+    
     refreshVideos();
-    setInterval(refreshVideos, 2000);
-}
-
-// Event listeners
-function setupEventListeners() {
-    // Message handling
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        switch (message.action) {
-            case 'getTimeAndPause':
-                if (state.videos.length > 0 && !state.whitelisted) {
-                    state.playbackPosition = state.videos[0].currentTime;
-                    pauseAllVideos();
-                }
-                sendResponse({ time: state.playbackPosition });
-                break;
-
-            case 'resume':
-                if (state.videos.length > 0 && message.time && !state.whitelisted) {
-                    resumeAllVideos(message.time);
-                }
-                break;
-
-            case 'updateSettings':
-                state.settings = message.settings;
-                break;
-        }
-        return true;
-    });
-
-    // Tab visibility
-    document.addEventListener('visibilitychange', () => {
-        if (!state.whitelisted && document.hidden) {
-            pauseAllVideos();
-        }
-    });
-
-    // Scroll pause
-    window.addEventListener('scroll', () => {
-        if (!state.whitelisted && state.settings.scrollPause) {
-            const scrollDiff = Math.abs(window.scrollY - state.lastScrollY);
-            if (scrollDiff > 100) {
-                pauseAllVideos();
-            }
-            state.lastScrollY = window.scrollY;
-        }
+    
+    const observer = new MutationObserver(refreshVideos);
+    observer.observe(document.body, { 
+        childList: true, 
+        subtree: true 
     });
 }
 
-// Video controls
+// Video control functions -----------------------------------------------------------------------------------------------------------
 function pauseAllVideos() {
     state.videos.forEach(v => {
         if (!v.paused) {
@@ -111,10 +42,11 @@ function pauseAllVideos() {
     });
 }
 
-function resumeAllVideos(time) {
+function resumeAllVideos(playbackPositions) {
     state.videos.forEach(v => {
         if (v.dataset.ekagraPaused === 'true') {
-            v.currentTime = time;
+            const savedTime = playbackPositions.get(v) || 0;
+            v.currentTime = savedTime;
             v.play()
                 .then(() => delete v.dataset.ekagraPaused)
                 .catch(e => console.log("Play failed:", e));
@@ -122,7 +54,62 @@ function resumeAllVideos(time) {
     });
 }
 
-// Initialize
+// Setup event listeners -----------------------------------------------------------------------------------------------------------
+function setupEventListeners() {
+    const handleScroll = () => {
+        if (state.whitelisted || !state.settings?.scrollPause) return;
+        
+        clearTimeout(state.scrollTimeout);
+        state.scrollTimeout = setTimeout(() => {
+            if (window.scrollY > 100) {
+                state.videos.forEach(v => {
+                    state.playbackPositions.set(v, v.currentTime);
+                });
+                pauseAllVideos();
+            } else if (window.scrollY <= 80) {
+                resumeAllVideos(state.playbackPositions);
+            }
+        }, 200);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Visibility change handler -------------------------------------------------------------------------------------------------------
+    document.addEventListener("visibilitychange", () => {
+        if (state.whitelisted) return;
+        
+        if (document.hidden) {
+            state.videos.forEach(v => {
+                state.playbackPositions.set(v, v.currentTime);
+            });
+            pauseAllVideos();
+        } else {
+            resumeAllVideos(state.playbackPositions);
+        }
+    });
+}
+
+// Initialize the script ------------------------------------------------------------------------------------------------------------
+function init() {
+    chrome.runtime.sendMessage({ action: 'getSettings' }, (response) => {
+        state.settings = response || { scrollPause: true };
+        checkWhitelist(() => {
+            setupVideoTracking();
+            setupEventListeners();
+        });
+    });
+
+    // Message listener for updates ---------------------------------------------------------------------------------
+    chrome.runtime.onMessage.addListener((message) => {
+        if (message.action === 'whitelistUpdated') {
+            checkWhitelist();
+        } else if (message.action === 'settingsUpdated') {
+            state.settings = message.settings;
+        }
+    });
+}
+
+// Run initialization-------------------------------------------------------------------------------------------------------
 if (document.readyState === 'complete') {
     init();
 } else {

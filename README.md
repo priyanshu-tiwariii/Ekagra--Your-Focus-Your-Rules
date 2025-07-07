@@ -32,7 +32,7 @@ Below are preview images of the extension showcasing its live behavior and dashb
 
 <div align="center">
   <img src="./screenshot-rocks%20(3).png" alt="Extension Live" width="45%" style="margin-right: 10px;"/>
-  <img src="./screenshot-rocks (1).png" width="45%" height="110%" alt="Extension Dashboard" width="45%"/>
+  <img src="./screenshot-rocks (1).png"  alt="Extension Dashboard" width="45%"/>
 </div>
 
 <br/>
